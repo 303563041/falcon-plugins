@@ -42,12 +42,12 @@ class Resource():
 
     def run(self):
         self.resources_d={
-            'process.cpu.user':[self.get_cpu_user,'COUNTER'],
-            'process.cpu.sys':[self.get_cpu_sys,'COUNTER'],
-            'process.cpu.all':[self.get_cpu_all,'COUNTER'],
-            'process.mem':[self.get_mem,'GAUGE'],
-            'process.swap':[self.get_swap,'GAUGE'],
-            'process.fd':[self.get_fd,'GAUGE']
+            'java.cpu.user':[self.get_cpu_user,'COUNTER'],
+            'java.cpu.sys':[self.get_cpu_sys,'COUNTER'],
+            'java.cpu.all':[self.get_cpu_all,'COUNTER'],
+            'java.mem':[self.get_mem,'GAUGE'],
+            'java.swap':[self.get_swap,'GAUGE'],
+            'java.fd':[self.get_fd,'GAUGE']
         }
 
         if not os.path.isdir("/proc/" + str(self.pid)):
