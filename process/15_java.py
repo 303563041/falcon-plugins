@@ -13,8 +13,11 @@ import copy
 
 class Resource():
     def __init__(self, pid):
-        self.host = socket.gethostname()
         self.pid = pid
+        self.config = '/data/open-falcon/cfg.json'
+        with.open(self.config) as cfg:
+            self.data = json.load(cfg)
+        self.host = self.data['hostname']
 
     def get_cpu_user(self):
         cmd="cat /proc/" + str(self.pid)  +  "/stat |awk '{print $14+$16}'"
