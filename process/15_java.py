@@ -15,7 +15,7 @@ class Resource():
     def __init__(self, pid):
         self.pid = pid
         self.config = '/data/open-falcon/cfg.json'
-        with.open(self.config) as cfg:
+        with open(self.config) as cfg:
             self.data = json.load(cfg)
         self.host = self.data['hostname']
 
