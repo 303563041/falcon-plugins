@@ -70,6 +70,7 @@ def main():
         print "here", e
         sys.exit()
     f.close()
+    os.makedirs("./data")
     checkFile(configs)
 
 def loadOffset(exp):
