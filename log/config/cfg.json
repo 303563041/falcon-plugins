@@ -1,0 +1,11 @@
+[
+    {
+        "path": "/data/logs/idp/idp.log",
+        "keywords": [
+            {
+                "exp": "xception",
+                "tag": "ERROR"
+            }
+        ]
+    }
+]
