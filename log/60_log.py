@@ -67,20 +67,20 @@ def sendMsg(metric, tag, value):
 
 def main():
     try:
-        f = open("./config/cfg.json", "r")
+        f = open("/data/open-falcon/plugin/log/config/cfg.json", "r")
         configs = json.loads(f.read())
     except Exception as e:
         print "here", e
         sys.exit()
     f.close()
-    if not os.path.exists("./data"):
-        os.makedirs("./data")
+    if not os.path.exists("/data/open-falcon/plugin/log/data"):
+        os.makedirs("/data/open-falcon/plugin/log/data")
 
     checkFile(configs)
 
 def loadOffset(task):
     fileName = task + ".logoffset"
-    fullpath = "./data/" + fileName
+    fullpath = "/data/open-falcon/plugin/log/data/" + fileName
 
     if not os.path.isfile(fullpath):
         return -1;
@@ -93,7 +93,7 @@ def loadOffset(task):
 
 def saveOffset(task, offset):
     fileName = task + ".logoffset"
-    fullpath = "./data/" + fileName
+    fullpath = "/data/open-falcon/plugin/log/data/" + fileName
 
     file = open(fullpath, 'w')
     file.write(str(offset))
