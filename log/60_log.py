@@ -56,6 +56,7 @@ def sendMsg(metric, tag, value):
         data = json.load(cfg)
     hostname = data["hostname"]
     t = {}
+    rs = []
     t['endpoint'] = hostname
     t['timestamp'] = int(time.time())
     t['step'] = 60
@@ -63,7 +64,8 @@ def sendMsg(metric, tag, value):
     t['metric'] = metric
     t['tags'] = tag
     t['value'] = value
-    print json.dumps(t)
+    rs.append(t)
+    print json.dumps(rs)
 
 def main():
     try:
