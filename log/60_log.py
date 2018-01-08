@@ -70,7 +70,9 @@ def main():
         print "here", e
         sys.exit()
     f.close()
-    os.makedirs("./data")
+    if not os.path.exists("./data"):
+        os.makedirs("./data")
+        
     checkFile(configs)
 
 def loadOffset(exp):
