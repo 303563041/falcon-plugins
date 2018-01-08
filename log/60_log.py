@@ -78,7 +78,7 @@ def main():
     checkFile(configs)
 
 def loadOffset(task):
-    fileName = exp + ".logoffset"
+    fileName = task + ".logoffset"
     fullpath = "./data/" + fileName
 
     if not os.path.isfile(fullpath):
@@ -91,7 +91,7 @@ def loadOffset(task):
 
 
 def saveOffset(task, offset):
-    fileName = exp + ".logoffset"
+    fileName = task + ".logoffset"
     fullpath = "./data/" + fileName
 
     file = open(fullpath, 'w')
