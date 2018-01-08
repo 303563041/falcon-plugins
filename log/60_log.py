@@ -39,6 +39,7 @@ def checkFile(configs):
             file = open(path, "r")
             file.seek(preOffset)
             lines = file.readlines()
+            file.close()
             for line in lines:
                 if re.search(exp, line):
                     index += 1
