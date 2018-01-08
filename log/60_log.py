@@ -5,6 +5,7 @@ import datetime
 import sys
 import os
 import json
+import re
 
 def checkFile(configs):
     '''
@@ -22,14 +23,15 @@ def checkFile(configs):
         for keyword in config["keywords"]:
             exp = keyword["exp"]
             tag = keyword["tag"] + "=" + exp
-            metric = "logs"
+            metric = "logs-" + os.path.basename(path)
+            task = metric + "-" + exp
             index = 0
-            preOffset = loadOffset(exp)
+            preOffset = loadOffset(task)
             if preOffset < 0:
-                saveOffset(exp, curOffset)
+                saveOffset(task, curOffset)
                 return 0
 
-            saveOffset(exp, curOffset)
+            saveOffset(task, curOffset)
 
             if preOffset > curOffset:
                 preOffset = curOffset
@@ -72,10 +74,10 @@ def main():
     f.close()
     if not os.path.exists("./data"):
         os.makedirs("./data")
-        
+
     checkFile(configs)
 
-def loadOffset(exp):
+def loadOffset(task):
     fileName = exp + ".logoffset"
     fullpath = "./data/" + fileName
 
@@ -88,7 +90,7 @@ def loadOffset(exp):
     return offset
 
 
-def saveOffset(exp, offset):
+def saveOffset(task, offset):
     fileName = exp + ".logoffset"
     fullpath = "./data/" + fileName
 
