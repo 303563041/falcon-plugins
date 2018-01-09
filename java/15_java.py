@@ -82,7 +82,6 @@ if __name__ == "__main__":
             for i in p.cmdline():
                 if "tomcat" in i:
                     java_pid = pid
-                    print java_pid
                     break
     d = Resource(java_pid).run()
     if d:
