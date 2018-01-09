@@ -63,8 +63,7 @@ class Resource():
                 t['counterType'] = self.resources_d[resource][1]
                 t['metric'] = resource
                 t['value']= self.resources_d[resource][0]()
-                t['tags'] = 'pid=%s' %self.pid
-
+                t['tags'] = 'name=tomcat'
                 output.append(t)
 
         return output
@@ -80,7 +79,11 @@ if __name__ == "__main__":
         p = psutil.Process(pid)
         name = p.name()
         if name == 'java':
-            java_pid = pid
+            for i in p.cmdline():
+                if "tomcat" in i:
+                    java_pid = pid
+                    print java_pid
+                    break
     d = Resource(java_pid).run()
     if d:
         print json.dumps(d)
