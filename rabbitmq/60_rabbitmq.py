@@ -24,7 +24,6 @@ class Resource():
         self.rates = ('ack', 'deliver', 'deliver_get', 'publish')
         self.logger = logging.getLogger("Rabbitmq")
         self.logger.setLevel(logging.INFO)
-        self.tag = ''
 
     def connMq(self):
         try:
