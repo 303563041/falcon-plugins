@@ -24,8 +24,8 @@ class Resource():
         self.rds_instance_identifier = r.get_rds_identifier()
         self.ts = int(time.time())
         self.endpoint = "townkins-rds"
-        self.start_time = time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(self.ts - 180))
-        self.end_time = time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(self.ts - 120))
+        self.start_time = time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(self.ts - 300))
+        self.end_time = time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(self.ts - 240))
         self.mysql_metric_list = [
             "FreeableMemory",
             "ReadLatency",
@@ -97,7 +97,11 @@ class Resource():
                 value = round(json.loads(output)["Datapoints"][0]["Average"])
             except Exception,e:
                 value = -1
-            d = int(time.mktime(time.strptime(json.loads(output)["Datapoints"][0]["Timestamp"], "%Y-%m-%dT%H:%M:%SZ")))
+
+            try:
+                d = int(time.mktime(time.strptime(json.loads(output)["Datapoints"][0]["Timestamp"], "%Y-%m-%dT%H:%M:%SZ")))
+            except Exception,e:
+                d = int(time.localtime(self.ts - 240))
             i = {
                 'metric': '%s.%s' % (self.metric, m),
                 'endpoint': '%s-%s' % (identifier, self.endpoint),
