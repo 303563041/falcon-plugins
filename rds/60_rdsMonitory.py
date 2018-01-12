@@ -116,7 +116,7 @@ class Resource():
                 _value = int(Status_dict.get(_key,0))
 
             i = {
-                    'metric': 'rds.%s' % (_key),
+                    'metric': 'mysql.%s' % (_key),
                     'endpoint': '%s-townkins-rds' % endpoint.split('.')[0],
                     'timestamp': self.ts,
                     'step': self.step,
