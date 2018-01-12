@@ -54,7 +54,6 @@ class Resource():
             "NetworkThroughput",
             "InsertThroughput",
             "SelectLatency",
-            "BacktrackStorageSize",
             "CPUUtilization",
             "NetworkReceiveThroughput",
             "FreeLocalStorage",
