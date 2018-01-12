@@ -88,7 +88,7 @@ class Resource():
 
             i = {
                     'metric': 'rds.%s' % (_key),
-                    'endpoint': endpoint.split('.')[0],
+                    'endpoint': '%s-townkins-rds' % endpoint.split('.')[0],
                     'timestamp': self.ts,
                     'step': self.step,
                     'value': _value,
