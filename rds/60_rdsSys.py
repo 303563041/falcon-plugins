@@ -7,12 +7,6 @@ import get_rds_instances
 from multiprocessing.pool import ThreadPool as Pool 
 import logging
 import time
-import requests
-
-###############
-# 
-#
-###############
 
 class Resource():
 
@@ -54,6 +48,7 @@ class Resource():
             "NetworkThroughput",
             "InsertThroughput",
             "SelectLatency",
+            "BacktrackStorageSize",
             "CPUUtilization",
             "NetworkReceiveThroughput",
             "FreeLocalStorage",
