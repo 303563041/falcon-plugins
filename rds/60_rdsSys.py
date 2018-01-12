@@ -121,7 +121,7 @@ class Resource():
             logging.error(e)
         pool.close()
         pool.join()
-        r = requests.post("http://127.0.0.1:1988/v1/push", data=json.dumps(self.p))
+        print json.dumps(self.p)
 
 if __name__ == "__main__":
     Resource().run()
