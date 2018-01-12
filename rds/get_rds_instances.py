@@ -7,8 +7,8 @@ import commands
 class GetRdsInstancesList():
 
     def __init__(self):
-        self.endpoint = "aws rds describe-db-instances  --query 'DBInstances[].Endpoint.[Address]' --output text"
-        self.identifier = "aws rds describe-db-instances  --query 'DBInstances[].[DBInstanceIdentifier,StorageType]' --output text"
+        self.endpoint = "/usr/local/bin/aws rds describe-db-instances  --query 'DBInstances[].Endpoint.[Address]' --output text"
+        self.identifier = "/usr/local/bin/aws rds describe-db-instances  --query 'DBInstances[].[DBInstanceIdentifier,StorageType]' --output text"
 
     def get_rds_endpoints(self):
         """
