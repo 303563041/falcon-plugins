@@ -24,8 +24,8 @@ class Resource():
         self.rds_instance_identifier = r.get_rds_identifier()
         self.ts = int(time.time())
         self.endpoint = "townkins-rds"
-        self.start_time = time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(self.ts - 300))
-        self.end_time = time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(self.ts - 240))
+        self.start_time = time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(self.ts - 180))
+        self.end_time = time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(self.ts - 120))
         self.mysql_metric_list = [
             "FreeableMemory",
             "ReadLatency",
@@ -91,7 +91,7 @@ class Resource():
             metric_list = self.mysql_metric_list
 
         for m in metric_list:
-            cmd = "aws cloudwatch get-metric-statistics --metric-name %s --start-time %s --end-time %s --period 60 --namespace AWS/RDS --statistics Average --dimensions Name=DBInstanceIdentifier,Value=%s" % (m, self.start_time, self.end_time, identifier)
+            cmd = "/usr/local/bin/aws cloudwatch get-metric-statistics --metric-name %s --start-time %s --end-time %s --period 60 --namespace AWS/RDS --statistics Average --dimensions Name=DBInstanceIdentifier,Value=%s" % (m, self.start_time, self.end_time, identifier)
             status, output = commands.getstatusoutput(cmd)
             try:
                 value = round(json.loads(output)["Datapoints"][0]["Average"])
@@ -101,7 +101,7 @@ class Resource():
             try:
                 d = int(time.mktime(time.strptime(json.loads(output)["Datapoints"][0]["Timestamp"], "%Y-%m-%dT%H:%M:%SZ")))
             except Exception,e:
-                d = int(time.localtime(self.ts - 240))
+                d = int(time.localtime(self.ts - 120))
             i = {
                 'metric': '%s.%s' % (self.metric, m),
                 'endpoint': '%s-%s' % (identifier, self.endpoint),
