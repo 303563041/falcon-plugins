@@ -7,6 +7,7 @@ import get_rds_instances
 from multiprocessing.pool import ThreadPool as Pool 
 import logging
 import time
+import requests
 
 ###############
 # 
@@ -96,7 +97,7 @@ class Resource():
                 value = round(json.loads(output)["Datapoints"][0]["Average"])
             except Exception,e:
                 value = -1
-            d = time.mktime(time.strptime(json.loads(output)["Datapoints"][0]["Timestamp"], "%Y-%m-%dT%H:%M:%SZ"))
+            d = int(time.mktime(time.strptime(json.loads(output)["Datapoints"][0]["Timestamp"], "%Y-%m-%dT%H:%M:%SZ")))
             i = {
                 'metric': '%s.%s' % (self.metric, m),
                 'endpoint': '%s-%s' % (identifier, self.endpoint),
@@ -120,7 +121,7 @@ class Resource():
             logging.error(e)
         pool.close()
         pool.join()
-        print self.p
+        r = requests.post("http://127.0.0.1:1988/v1/push", data=json.dumps(self.p))
 
 if __name__ == "__main__":
     Resource().run()
