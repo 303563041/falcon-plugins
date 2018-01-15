@@ -48,7 +48,6 @@ class Resource():
             "NetworkThroughput",
             "InsertThroughput",
             "SelectLatency",
-            "BacktrackStorageSize",
             "CPUUtilization",
             "NetworkReceiveThroughput",
             "FreeLocalStorage",
@@ -95,7 +94,7 @@ class Resource():
             try:
                 d = int(time.mktime(time.strptime(json.loads(output)["Datapoints"][0]["Timestamp"], "%Y-%m-%dT%H:%M:%SZ")))
             except Exception,e:
-                d = int(time.localtime(self.ts - 120))
+                d = int((self.ts - 120))
             i = {
                 'metric': '%s.%s' % (self.metric, m),
                 'endpoint': '%s-%s' % (identifier, self.endpoint),
