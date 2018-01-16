@@ -63,6 +63,39 @@ class Resource():
             "InsertLatency",
             "BinLogDiskUsage"
         ]
+        self.mysql_monitors = [
+            ('Com_select','COUNTER'),
+            ('Qcache_hits','COUNTER'),
+            ('Com_insert','COUNTER'),
+            ('Com_update','COUNTER'),
+            ('Com_delete','COUNTER'),
+            ('Com_replace','COUNTER'),
+            ('MySQL_QPS','COUNTER'),
+            ('MySQL_TPS','COUNTER'),
+            ('ReadWrite_ratio','GAUGE'),
+            ('Innodb_buffer_pool_read_requests','COUNTER'),
+            ('Innodb_buffer_pool_reads','COUNTER'),
+            ('Innodb_buffer_read_hit_ratio','GAUGE'),
+            ('Innodb_buffer_pool_pages_flushed','COUNTER'),
+            ('Innodb_buffer_pool_pages_free','GAUGE'),
+            ('Innodb_buffer_pool_pages_dirty','GAUGE'),
+            ('Innodb_buffer_pool_pages_data','GAUGE'),
+            ('Bytes_received','COUNTER'),
+            ('Bytes_sent','COUNTER'),
+            ('Innodb_rows_deleted','COUNTER'),
+            ('Innodb_rows_inserted','COUNTER'),
+            ('Innodb_rows_read','COUNTER'),
+            ('Innodb_rows_updated','COUNTER'),
+            ('Innodb_os_log_fsyncs','COUNTER'),
+            ('Innodb_os_log_written','COUNTER'),
+            ('Created_tmp_disk_tables','COUNTER'),
+            ('Created_tmp_tables','COUNTER'),
+            ('Connections','COUNTER'),
+            ('Innodb_log_waits','COUNTER'),
+            ('Slow_queries','COUNTER'),
+            ('Binlog_cache_disk_use','COUNTER')
+        ]
+        self.p = []
 
     def getRdsIdentifiers(self):
         """

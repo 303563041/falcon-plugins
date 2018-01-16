@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import get_rds_instances
 import MySQLdb
 import logging
 from multiprocessing.pool import ThreadPool as Pool 
 import time
 import json
 import sys
+import boto3
 
 
 class Resource():
@@ -16,8 +16,7 @@ class Resource():
         self.user = "readonly"
         self.passwd = "v%v7@5X8SnB8"
         self.port = 3306
-        r = get_rds_instances.GetRdsInstancesList()
-        self.rds_instance_endpoints = r.get_rds_endpoints()
+        self.rdsEndpoints = []
         self.step = 60
         self.ts = int(time.time())
         self.monitor_keys = [
@@ -54,6 +53,23 @@ class Resource():
         ]
         self.p = []
 
+    def getRdsEndpoints(self):
+        """
+        get rds identifier list to self.rdsIdentifiers parameters
+        """
+        client = boto3.client('rds')
+        response = client.describe_db_instances()
+        for r in response["DBInstances"]:
+            endpoint = r["Endpoint"]["Address"]
+            self.rdsEndpoints.append(endpoint)
+
+    def conn(self, endpoint):
+        """
+        connect mysql
+        """
+        self.conn = MySQLdb.connect(host=endpoint, user=self.user, passwd=self.passwd, port=self.port, charset="utf8")
+        self.cursor = self.conn.cursor()
+
     def get_mysql_statistic(self, endpoint):
         """
         Undo_Log_Length     GAUGE  未清除的Undo事务数
@@ -88,9 +104,8 @@ class Resource():
         Binlog_cache_disk_use   COUNTER     Binlog Cache不足的数量/秒
         """
         conn = MySQLdb.connect(host=endpoint, user=self.user, passwd=self.passwd, port=self.port, charset="utf8")
-
-        query = "SHOW GLOBAL STATUS"
         cursor = conn.cursor()
+        query = "SHOW GLOBAL STATUS"
         cursor.execute(query)
         Str_string = cursor.fetchall()
         Status_dict = {}
@@ -111,7 +126,7 @@ class Resource():
                 try:
                     _value = round((int(Status_dict.get('Com_select',0)) + int(Status_dict.get('Qcache_hits',0)))/(int(Status_dict.get('Com_insert',0)) + int(Status_dict.get('Com_update',0)) + int(Status_dict.get('Com_delete',0)) + int(Status_dict.get('Com_replace',0))),2)
                 except ZeroDivisionError:
-                    _value = 0            
+                    _value = 0
             else:
                 _value = int(Status_dict.get(_key,0))
 
@@ -128,25 +143,23 @@ class Resource():
             self.p.append(i)
         cursor.close()
         conn.close()
-
+        
 
     def run(self):
         """
-        pool = Pool(10)
-        try:
-            for endpoint in self.rds_instance_endpoints:
-                pool.apply_async(self.get_mysql_statistic, (endpoint, ))
-        except Exception,e:
-            logging.error(e)
-        pool.close()
-        pool.join()
+        main
         """
-        for endpoint in self.rds_instance_endpoints:
+        self.getRdsEndpoints()
+        pool = Pool(10)
+        for endpoint in self.rdsEndpoints:
             try:
-                self.get_mysql_statistic(endpoint)
+                pool.apply_async(self.get_mysql_statistic, (endpoint, ))
             except Exception,e:
                 logging.error(e)
                 continue
+        pool.close()
+        pool.join()
+        
         print json.dumps(self.p)
 
 
