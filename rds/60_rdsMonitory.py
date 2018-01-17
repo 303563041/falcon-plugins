@@ -49,7 +49,8 @@ class Resource():
             ('Connections','COUNTER'),
             ('Innodb_log_waits','COUNTER'),
             ('Slow_queries','COUNTER'),
-            ('Binlog_cache_disk_use','COUNTER')
+            ('Binlog_cache_disk_use','COUNTER'),
+            ('Status', 'GAUGE')
         ]
         self.p = []
 
@@ -62,13 +63,6 @@ class Resource():
         for r in response["DBInstances"]:
             endpoint = r["Endpoint"]["Address"]
             self.rdsEndpoints.append(endpoint)
-
-    def conn(self, endpoint):
-        """
-        connect mysql
-        """
-        self.conn = MySQLdb.connect(host=endpoint, user=self.user, passwd=self.passwd, port=self.port, charset="utf8")
-        self.cursor = self.conn.cursor()
 
     def get_mysql_statistic(self, endpoint):
         """
@@ -103,7 +97,19 @@ class Resource():
         Slow_queries    COUNTER     慢查询数/秒
         Binlog_cache_disk_use   COUNTER     Binlog Cache不足的数量/秒
         """
-        conn = MySQLdb.connect(host=endpoint, user=self.user, passwd=self.passwd, port=self.port, charset="utf8")
+        try:
+            conn = MySQLdb.connect(host=endpoint, user=self.user, passwd=self.passwd, port=self.port, charset="utf8")
+        except Exception, e:
+            i = {
+                'metric': 'mysql.Status',
+                'endpoint': '%s-townkins-rds' % endpoint.split('.')[0],
+                'timestamp': self.ts,
+                'step': self.step,
+                'value': -1,
+                'counterType': 'GAUGE',
+                'tags': ""
+            }
+            self.p.append(i)
         cursor = conn.cursor()
         query = "SHOW GLOBAL STATUS"
         cursor.execute(query)
@@ -121,14 +127,16 @@ class Resource():
                 try:
                     _value = round((int(Status_dict.get('Innodb_buffer_pool_read_requests',0)) - int(Status_dict.get('Innodb_buffer_pool_reads',0)))/int(Status_dict.get('Innodb_buffer_pool_read_requests',0)) * 100,3)
                 except ZeroDivisionError:
-                    _value = 0
+                    _value = -1
             elif _key == 'ReadWrite_ratio':
                 try:
                     _value = round((int(Status_dict.get('Com_select',0)) + int(Status_dict.get('Qcache_hits',0)))/(int(Status_dict.get('Com_insert',0)) + int(Status_dict.get('Com_update',0)) + int(Status_dict.get('Com_delete',0)) + int(Status_dict.get('Com_replace',0))),2)
                 except ZeroDivisionError:
-                    _value = 0
+                    _value = -1
+            elif _key == 'Status':
+                _value = 1
             else:
-                _value = int(Status_dict.get(_key,0))
+                _value = int(Status_dict.get(_key,-1))
 
             i = {
                     'metric': 'mysql.%s' % (_key),
