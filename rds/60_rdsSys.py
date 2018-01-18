@@ -63,38 +63,27 @@ class Resource():
             "InsertLatency",
             "BinLogDiskUsage"
         ]
-        self.mysql_monitors = [
-            ('Com_select','COUNTER'),
-            ('Qcache_hits','COUNTER'),
-            ('Com_insert','COUNTER'),
-            ('Com_update','COUNTER'),
-            ('Com_delete','COUNTER'),
-            ('Com_replace','COUNTER'),
-            ('MySQL_QPS','COUNTER'),
-            ('MySQL_TPS','COUNTER'),
-            ('ReadWrite_ratio','GAUGE'),
-            ('Innodb_buffer_pool_read_requests','COUNTER'),
-            ('Innodb_buffer_pool_reads','COUNTER'),
-            ('Innodb_buffer_read_hit_ratio','GAUGE'),
-            ('Innodb_buffer_pool_pages_flushed','COUNTER'),
-            ('Innodb_buffer_pool_pages_free','GAUGE'),
-            ('Innodb_buffer_pool_pages_dirty','GAUGE'),
-            ('Innodb_buffer_pool_pages_data','GAUGE'),
-            ('Bytes_received','COUNTER'),
-            ('Bytes_sent','COUNTER'),
-            ('Innodb_rows_deleted','COUNTER'),
-            ('Innodb_rows_inserted','COUNTER'),
-            ('Innodb_rows_read','COUNTER'),
-            ('Innodb_rows_updated','COUNTER'),
-            ('Innodb_os_log_fsyncs','COUNTER'),
-            ('Innodb_os_log_written','COUNTER'),
-            ('Created_tmp_disk_tables','COUNTER'),
-            ('Created_tmp_tables','COUNTER'),
-            ('Connections','COUNTER'),
-            ('Innodb_log_waits','COUNTER'),
-            ('Slow_queries','COUNTER'),
-            ('Binlog_cache_disk_use','COUNTER')
-        ]
+        self.memory_mapping = {
+            'db.t2.micro': 1,
+            'db.t2.small': 2,
+            'db.t2.medium': 4,
+            'db.r3.large': 15,
+            'db.r3.xlarge': 30.5,
+            'db.r3.2xlarge': 61,
+            'db.r3.4xlarge': 122,
+            'db.r3.8xlarge': 244,
+            'db.m3.medium': 3.75,
+            'db.m3.large': 7.5,
+            'db.m3.xlarge': 15,
+            'db.m3.2xlarge': 30,
+            'db.m4.large': 8,
+            'db.m4.xlarge': 16,
+            'db.m4.2xlarge': 32,
+            'db.m4.4xlarge': 64,
+            'db.m4.10xlarge': 160,
+            'other': 0
+        }
+
         self.p = []
 
     def getRdsIdentifiers(self):
@@ -106,9 +95,10 @@ class Resource():
         for r in response["DBInstances"]:
             identifier = r["DBInstanceIdentifier"]
             storageType = r["StorageType"]
-            self.rdsIdentifiers.append((identifier, storageType))
+            DBInstanceClass = r["DBInstanceClass"]
+            self.rdsIdentifiers.append((identifier, storageType, DBInstanceClass))
 
-    def getRdsMonitor(self, identifier, metric, storageType):
+    def getRdsMonitor(self, identifier, metric, storageType, DBInstanceClass):
         """
         get per rds metric statistics
         """
@@ -127,7 +117,11 @@ class Resource():
                     Period = 60,
                     Statistics = ['Average']
                 )
-            value = response["Datapoints"][0]["Average"]
+            if metric == 'FreeableMemory':
+                memory_total = self.memory_mapping[DBInstanceClass]
+                value = response["Datapoints"][0]["Average"]/(memory_total * 1000 * 1000 * 1000) * 100
+            else:
+                value = response["Datapoints"][0]["Average"]
         except Exception, e:
             value = -1
 
@@ -153,7 +147,7 @@ class Resource():
         pool = Pool(10)
 
         # main task
-        for identifier, storageType in self.rdsIdentifiers:
+        for identifier, storageType, DBInstanceClass in self.rdsIdentifiers:
             if storageType == "aurora":
                 metrics = self.aurora_metric_list
             else:
@@ -161,7 +155,7 @@ class Resource():
 
             for metric in metrics:
                 try:
-                    pool.apply_async(self.getRdsMonitor, (identifier, metric, storageType))
+                    pool.apply_async(self.getRdsMonitor, (identifier, metric, storageType, DBInstanceClass))
                 except Exception,e:
                     logging.error(e)
                     continue
