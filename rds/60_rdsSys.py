@@ -96,9 +96,10 @@ class Resource():
             identifier = r["DBInstanceIdentifier"]
             storageType = r["StorageType"]
             DBInstanceClass = r["DBInstanceClass"]
-            self.rdsIdentifiers.append((identifier, storageType, DBInstanceClass))
+            AllocatedStorage = r["AllocatedStorage"]
+            self.rdsIdentifiers.append((identifier, storageType, DBInstanceClass, AllocatedStorage))
 
-    def getRdsMonitor(self, identifier, metric, storageType, DBInstanceClass):
+    def getRdsMonitor(self, identifier, metric, storageType, DBInstanceClass, AllocatedStorage):
         """
         get per rds metric statistics
         """
@@ -119,7 +120,9 @@ class Resource():
                 )
             if metric == 'FreeableMemory':
                 memory_total = self.memory_mapping[DBInstanceClass]
-                value = response["Datapoints"][0]["Average"]/(memory_total * 1000 * 1000 * 1000) * 100
+                value = response["Datapoints"][0]["Average"]/(memory_total * 1024 * 1024 * 1024) * 100
+            elif metric == 'FreeStorageSpace':
+                value = response["Datapoints"][0]["Average"]/(AllocatedStorage * 1024 * 1024 * 1024) * 100
             else:
                 value = response["Datapoints"][0]["Average"]
         except Exception, e:
@@ -147,7 +150,7 @@ class Resource():
         pool = Pool(10)
 
         # main task
-        for identifier, storageType, DBInstanceClass in self.rdsIdentifiers:
+        for identifier, storageType, DBInstanceClass, AllocatedStorage in self.rdsIdentifiers:
             if storageType == "aurora":
                 metrics = self.aurora_metric_list
             else:
@@ -155,7 +158,7 @@ class Resource():
 
             for metric in metrics:
                 try:
-                    pool.apply_async(self.getRdsMonitor, (identifier, metric, storageType, DBInstanceClass))
+                    pool.apply_async(self.getRdsMonitor, (identifier, metric, storageType, DBInstanceClass, AllocatedStorage))
                 except Exception,e:
                     logging.error(e)
                     continue
