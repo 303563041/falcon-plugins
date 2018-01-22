@@ -49,6 +49,12 @@ class Resource():
             response = self.cloudwatch_client.get_metric_statistics(
                     Namespace = "AWS/ELB",
                     MetricName = "{0}".format(metric),
+                    Dimensions = [
+                        {
+                            'Name': 'LoadBalancerName',
+                            'Value': '{0}'.format(ElbName)
+                        },
+                    ],
                     StartTime = "{0}".format(self.start_time),
                     EndTime = "{0}".format(self.end_time),
                     Period = 60,
@@ -59,7 +65,6 @@ class Resource():
             else:
                 value = 0
         except Exception, e:
-            print e
             value = -1
 
         i = {
