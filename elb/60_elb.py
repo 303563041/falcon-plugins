@@ -17,12 +17,12 @@ class Resource():
         self.start_time = time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(time.time() - 180))
         self.end_time = time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(time.time() - 120))
         self.metric_list = [
-            ("hHTTPCode_Backend_4XX", "Sum"), 
-            ("hHTTPCode_Backend_5XX", "Sum"), 
-            ("hHTTPCode_ELB_5XX", "Sum"), 
-            ("hHTTPCode_ELB_4XX", "Sum"),
-            ("lLatency", "Average"),
-            ("uUnHealthyHostCount", "Average")
+            ("HTTPCode_Backend_4XX", "Sum"), 
+            ("HTTPCode_Backend_5XX", "Sum"), 
+            ("HTTPCode_ELB_5XX", "Sum"), 
+            ("HTTPCode_ELB_4XX", "Sum"),
+            ("Latency", "Average"),
+            ("UnHealthyHostCount", "Average")
         ]
         self.cloudwatch_client = boto3.client("cloudwatch")
         self.LoadBalancerName = []
@@ -68,7 +68,7 @@ class Resource():
             value = -1
 
         i = {
-            'metric': 'elb.{0}'.format(metric),
+            'metric': 'elb.e{0}'.format(metric),
             'endpoint': 'elb.{0}'.format(ElbName),
             'timestamp': self.ts,
             'step': self.step,
