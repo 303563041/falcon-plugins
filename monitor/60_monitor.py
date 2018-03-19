@@ -9,7 +9,7 @@ import time
 def get_statistics(host, port):
     ''' get open falcon statistics '''
     uri = "/counter/all"
-    url = host + ":" + str(port) + uri
+    url = host + ":" + port + uri
     try:
         response = requests.get(url)
     except Exception as e:
@@ -23,13 +23,13 @@ def main():
     metrics = [
         {
             'name': 'transfer',
-            'port': 6060,
+            'port': '6060',
             'host': 'http://localhost',
             'qps': ['RecvCnt', 'SendToGraphCnt', 'SendToJudgeCnt']
         },
         {
             'name': 'graph',
-            'port': 6071,
+            'port': '6071',
             'host': 'http://localhost',
             'qps': ['GraphRpcRecvCnt', 'GraphQueryCnt']
         }
