@@ -24,14 +24,12 @@ def main():
         {
             'name': 'transfer',
             'port': '6060',
-            'host': 'http://localhost',
-            'qps': ['RecvCnt', 'SendToGraphCnt', 'SendToJudgeCnt']
+            'host': 'http://localhost'
         },
         {
             'name': 'graph',
             'port': '6071',
-            'host': 'http://localhost',
-            'qps': ['GraphRpcRecvCnt', 'GraphQueryCnt']
+            'host': 'http://localhost'
         }
     ]
 
@@ -39,10 +37,10 @@ def main():
         name = metric["name"]
         host = metric["host"]
         port = metric["port"]
-        qps = metric["qps"]
 
         response = get_statistics(host, port)
         if name == "transfer":
+            qps = ['RecvCnt', 'SendToGraphCnt', 'SendToJudgeCnt']
             if response["msg"] == "success":
                 for m in qps:
                     for i in response["data"]:
@@ -72,6 +70,7 @@ def main():
                     }
                     p.append(datapoint)
         elif name == "graph":
+            qps = ['GraphRpcRecvCnt', 'GraphQueryCnt']
             if response:
                 for m in qps:
                     for i in response:
