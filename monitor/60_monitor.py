@@ -51,7 +51,7 @@ class Resource:
                         'timestamp': self.ts,
                         'step': self.step,
                         'value': value,
-                        'counterType': 'COUNTER',
+                        'counterType': 'GAUGE',
                         'tags': ''
                     }
                     self.p.append(datapoint)
@@ -63,7 +63,7 @@ class Resource:
                         'timestamp': self.ts,
                         'step': self.step,
                         'value': value,
-                        'counterType': 'COUNTER',
+                        'counterType': 'GAUGE',
                         'tags': ''
                     }
                     self.p.append(datapoint)
@@ -78,7 +78,7 @@ class Resource:
                         'timestamp': self.ts,
                         'step': self.step,
                         'value': value,
-                        'counterType': 'COUNTER',
+                        'counterType': 'GAUGE',
                         'tags': ''
                     }
                     self.p.append(datapoint)
@@ -90,7 +90,7 @@ class Resource:
                         'timestamp': self.ts,
                         'step': self.step,
                         'value': value,
-                        'counterType': 'COUNTER',
+                        'counterType': 'GAUGE',
                         'tags': ''
                     }
                     self.p.append(datapoint)
