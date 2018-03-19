@@ -13,11 +13,11 @@ class Resource:
         self.ts = int(time.time())
         self.step = 60
         self.metrics = [
-            ("transfer", "http://localhost", "6060", "RecvCnt"),
-            ("transfer", "http://localhost", "6060", "SendToGraphCnt"),
-            ("transfer", "http://localhost", "6060", "SendToJudgeCnt"),
-            ("graph", "http://localhost", "6071", "GraphRpcRecvCnt"),
-            ("graph", "http://localhost", "6071", "GraphQueryCnt")
+            ("transfer", "http://localhost", "6060", "recvCnt"),
+            ("transfer", "http://localhost", "6060", "sendToGraphCnt"),
+            ("transfer", "http://localhost", "6060", "sendToJudgeCnt"),
+            ("graph", "http://localhost", "6071", "graphRpcRecvCnt"),
+            ("graph", "http://localhost", "6071", "graphQueryCnt")
         ]
 
 
@@ -46,7 +46,7 @@ class Resource:
                         if i["Name"] == qps:
                             value = i["Qps"]
                     datapoint = {
-                        'metric': '{0}.{1}.Qps'.format(name, qps),
+                        'metric': '{0}.{1}.qps'.format(name, qps),
                         'endpoint': '172.31.32.191-open-falcon',
                         'timestamp': self.ts,
                         'step': self.step,
@@ -58,7 +58,7 @@ class Resource:
                 else:
                     value = 0
                     datapoint = {
-                        'metric': '{0}.{1}.Qps'.format(name, qps),
+                        'metric': '{0}.{1}.qps'.format(name, qps),
                         'endpoint': '172.31.32.191-open-falcon',
                         'timestamp': self.ts,
                         'step': self.step,
@@ -73,7 +73,7 @@ class Resource:
                         if i["Name"] == qps:
                             value = i["Qps"]
                     datapoint = {
-                        'metric': '{0}.{1}.Qps'.format(name, qps),
+                        'metric': '{0}.{1}.qps'.format(name, qps),
                         'endpoint': '172.31.32.191-open-falcon',
                         'timestamp': self.ts,
                         'step': self.step,
@@ -85,7 +85,7 @@ class Resource:
                 else:
                     value = 0
                     datapoint = {
-                        'metric': '{0}.{1}.Qps'.format(name, qps),
+                        'metric': '{0}.{1}.qps'.format(name, qps),
                         'endpoint': '172.31.32.191-open-falcon',
                         'timestamp': self.ts,
                         'step': self.step,
