@@ -140,7 +140,7 @@ class Resource():
 
             i = {
                     'metric': 'mysql.m%s' % (_key),
-                    'endpoint': '%s-townkins-rds' % endpoint.split('.')[0],
+                    'endpoint': 'Townkins-rds-%s' % endpoint.split('.')[0],
                     'timestamp': self.ts,
                     'step': self.step,
                     'value': _value,
