@@ -47,7 +47,7 @@ class Resource:
                             value = i["Qps"]
                     datapoint = {
                         'metric': '{0}.a{1}'.format(name, qps),
-                        'endpoint': '172.31.32.191-open-falcon',
+                        'endpoint': 'open-falcon',
                         'timestamp': self.ts,
                         'step': self.step,
                         'value': value,
@@ -59,7 +59,7 @@ class Resource:
                     value = 0
                     datapoint = {
                         'metric': '{0}.a{1}'.format(name, qps),
-                        'endpoint': '172.31.32.191-open-falcon',
+                        'endpoint': 'open-falcon',
                         'timestamp': self.ts,
                         'step': self.step,
                         'value': value,
@@ -74,7 +74,7 @@ class Resource:
                             value = i["Qps"]
                     datapoint = {
                         'metric': '{0}.a{1}'.format(name, qps),
-                        'endpoint': '172.31.32.191-open-falcon',
+                        'endpoint': 'open-falcon',
                         'timestamp': self.ts,
                         'step': self.step,
                         'value': value,
@@ -86,7 +86,7 @@ class Resource:
                     value = 0
                     datapoint = {
                         'metric': '{0}.a{1}'.format(name, qps),
-                        'endpoint': '172.31.32.191-open-falcon',
+                        'endpoint': 'open-falcon',
                         'timestamp': self.ts,
                         'step': self.step,
                         'value': value,
