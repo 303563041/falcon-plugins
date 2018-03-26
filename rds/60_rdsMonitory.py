@@ -102,7 +102,7 @@ class Resource():
         except Exception, e:
             i = {
                 'metric': 'mysql.Status',
-                'endpoint': '%s-townkins-rds' % endpoint.split('.')[0],
+                'endpoint': 'Townkins-rds-%s' % endpoint.split('.')[0],
                 'timestamp': self.ts,
                 'step': self.step,
                 'value': -1,

@@ -16,7 +16,6 @@ class Resource():
         self.start_time = time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(time.time() - 180))
         self.end_time = time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(time.time() - 120))
         self.p = []
-        self.endpoint = "townkins-rds"
         self.step = 60
         self.counterType = "GAUGE"
         self.mysql_metric_list = [
@@ -130,7 +129,7 @@ class Resource():
 
         i = {
             'metric': 'rds.r{0}'.format(metric),
-            'endpoint': '{0}-{1}'.format(identifier, self.endpoint),
+            'endpoint': 'Townkins-rds-{0}'.format(identifier),
             'timestamp': self.ts,
             'step': self.step,
             'value': value,
