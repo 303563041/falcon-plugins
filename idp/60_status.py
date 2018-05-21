@@ -11,9 +11,7 @@ timeout = 5
 try:
     rs = requests.get(URL, timeout=timeout)
     value = 1
-except requests.exceptions.ConnectTimeout:
-    value = -1
-except requests.exceptions.Timeout:
+except Exception, e:
     value = -1
 d = []
 
