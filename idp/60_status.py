@@ -15,6 +15,7 @@ except requests.exceptions.ConnectTimeout:
     value = -1
 except requests.exceptions.Timeout:
     value = -1
+d = []
 
 i = {
     'metric': "idp.status",
@@ -25,5 +26,5 @@ i = {
     'counterType': "GAUGE",
     'tags': ""
 }
-
-print json.dumps(i)
+d.append(i)
+print json.dumps(d)
