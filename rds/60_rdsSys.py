@@ -80,6 +80,10 @@ class Resource():
             'db.m4.2xlarge': 32,
             'db.m4.4xlarge': 64,
             'db.m4.10xlarge': 160,
+            'db.r4.xlarge': 32,
+            'db.r4.large': 16,
+            'db.r4.2xlarge': 64,
+            'db.r4.4xlarge': 128,
             'other': 0
         }
 
