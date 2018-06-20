@@ -5,7 +5,14 @@ import time
 import json
 
 ts = int(time.time())
-URL = "http://townkins-hub-global.funplusgame.com/account/idp/v1/api/timecheck/"
+URL = "http://localhost:8080/account/idp/v1/api/timecheck/"
+config_path = "/data/open-falcon/cfg.json"
+
+with open(config_path, 'r') as config:
+    c = config.read()
+
+endpoint = json.loads(c)["hostname"]
+
 timeout = 5
 
 try:
@@ -17,7 +24,7 @@ d = []
 
 i = {
     'metric': "idp.status",
-    'endpoint': "Townkins-global-prod-hub",
+    'endpoint': endpoint,
     'timestamp': ts,
     'step': 60,
     'value': value,
