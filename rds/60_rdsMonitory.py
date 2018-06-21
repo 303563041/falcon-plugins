@@ -61,8 +61,11 @@ class Resource():
         client = boto3.client('rds')
         response = client.describe_db_instances()
         for r in response["DBInstances"]:
-            endpoint = r["Endpoint"]["Address"]
-            self.rdsEndpoints.append(endpoint)
+            if r["DBInstanceStatus"] == "available":
+                if "sandbox" in r["DBInstanceIdentifier"] or "staging" in r["DBInstanceIdentifier"]:
+                    continue
+                endpoint = r["Endpoint"]["Address"]
+                self.rdsEndpoints.append(endpoint)
 
     def get_mysql_statistic(self, endpoint):
         """

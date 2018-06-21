@@ -96,11 +96,14 @@ class Resource():
         client = boto3.client('rds')
         response = client.describe_db_instances()
         for r in response["DBInstances"]:
-            identifier = r["DBInstanceIdentifier"]
-            storageType = r["StorageType"]
-            DBInstanceClass = r["DBInstanceClass"]
-            AllocatedStorage = r["AllocatedStorage"]
-            self.rdsIdentifiers.append((identifier, storageType, DBInstanceClass, AllocatedStorage))
+            if r["DBInstanceStatus"] == "available":
+                if "sandbox" in r["DBInstanceIdentifier"] or "staging" in r["DBInstanceIdentifier"]:
+                    continue
+                identifier = r["DBInstanceIdentifier"]
+                storageType = r["StorageType"]
+                DBInstanceClass = r["DBInstanceClass"]
+                AllocatedStorage = r["AllocatedStorage"]
+                self.rdsIdentifiers.append((identifier, storageType, DBInstanceClass, AllocatedStorage))
 
     def getRdsMonitor(self, identifier, metric, storageType, DBInstanceClass, AllocatedStorage):
         """
