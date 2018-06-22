@@ -22,7 +22,8 @@ class Resource():
             ("HTTPCode_ELB_5XX", "Sum"), 
             ("HTTPCode_ELB_4XX", "Sum"),
             ("Latency", "Average"),
-            ("UnHealthyHostCount", "Average")
+            ("UnHealthyHostCount", "Average"),
+            ("RequestCount", "Sum")
         ]
         self.cloudwatch_client = boto3.client("cloudwatch")
         self.LoadBalancerName = []
@@ -69,7 +70,7 @@ class Resource():
 
         i = {
             'metric': 'elb.e{0}'.format(metric),
-            'endpoint': 'elb.{0}'.format(ElbName),
+            'endpoint': 'Townkins-elb-prod.{0}'.format(ElbName.replace('-', '_')),
             'timestamp': self.ts,
             'step': self.step,
             'value': value,
