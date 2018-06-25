@@ -7,5 +7,14 @@
                 "tag": "ERROR"
             }
         ]
+    },
+    {
+        "path": "/data/logs/iap/iap.log",
+        "keywords": [
+            {
+                "exp": "xception",
+                "tag": "ERROR"
+            }
+        ]
     }
 ]
