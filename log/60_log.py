@@ -11,6 +11,12 @@ def checkFile(configs):
     '''
     check log
     '''
+    config = "/data/open-falcon/cfg.json"
+    with open(config) as cfg:
+        data = json.load(cfg)
+    hostname = data["hostname"]
+    rs = []
+
     for config in configs:
         path = config["path"]
         if not os.path.isfile(path):
@@ -44,28 +50,17 @@ def checkFile(configs):
                 if re.search(exp, line):
                     index += 1
             value = index
-            sendMsg(metric, tag, value)
-
-
-def sendMsg(metric, tag, value):
-    '''
-    send content to falcon api
-    '''
-    config = "/data/open-falcon/cfg.json"
-    with open(config) as cfg:
-        data = json.load(cfg)
-    hostname = data["hostname"]
-    t = {}
-    rs = []
-    t['endpoint'] = hostname
-    t['timestamp'] = int(time.time())
-    t['step'] = 60
-    t['counterType'] = "GAUGE"
-    t['metric'] = metric
-    t['tags'] = tag
-    t['value'] = value
-    rs.append(t)
+            t = {}
+            t['endpoint'] = hostname
+            t['timestamp'] = int(time.time())
+            t['step'] = 60
+            t['counterType'] = "GAUGE"
+            t['metric'] = metric
+            t['tags'] = tag
+            t['value'] = value
+            rs.append(t)
     print json.dumps(rs)
+
 
 def main():
     try:
