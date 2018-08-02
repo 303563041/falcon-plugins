@@ -104,7 +104,7 @@ class Resource():
             conn = MySQLdb.connect(host=endpoint, user=self.user, passwd=self.passwd, port=self.port, charset="utf8")
         except Exception, e:
             i = {
-                'metric': 'mysql.Status',
+                'metric': 'mysql.mStatus',
                 'endpoint': 'Townkins-rds-%s' % endpoint.split('.')[0],
                 'timestamp': self.ts,
                 'step': self.step,
