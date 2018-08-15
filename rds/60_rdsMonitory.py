@@ -3,7 +3,7 @@
 
 import MySQLdb
 import logging
-from multiprocessing.pool import ThreadPool as Pool 
+from multiprocessing.pool import ThreadPool as Pool
 import time
 import json
 import sys
@@ -101,7 +101,13 @@ class Resource():
         Binlog_cache_disk_use   COUNTER     Binlog Cache不足的数量/秒
         """
         try:
-            conn = MySQLdb.connect(host=endpoint, user=self.user, passwd=self.passwd, port=self.port, charset="utf8")
+            conn = MySQLdb.connect(
+                host=endpoint,
+                user=self.user,
+                passwd=self.passwd,
+                port=self.port,
+                charset="utf8",
+                connect_timeout=10)
         except Exception, e:
             i = {
                 'metric': 'mysql.mStatus',
@@ -154,7 +160,7 @@ class Resource():
             self.p.append(i)
         cursor.close()
         conn.close()
-        
+
 
     def run(self):
         """
@@ -170,7 +176,7 @@ class Resource():
                 continue
         pool.close()
         pool.join()
-        
+
         print json.dumps(self.p)
 
 
