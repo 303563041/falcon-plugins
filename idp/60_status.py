@@ -9,11 +9,15 @@ URL = "http://localhost:8080/account/idp/v1/api/timecheck/"
 config_path = "/data/open-falcon/cfg.json"
 
 with open(config_path, 'r') as config:
-    c = config.read()
+    c = json.loads(config.read())
 
-endpoint = json.loads(c)["hostname"]
+endpoint = c["hostname"]
 
 timeout = 5
+tags = ""
+for k, v in c["default_tags"].items():
+    t = k + "=" + v
+    tags = tags + t + ","
 
 try:
     rs = requests.get(URL, timeout=timeout)
@@ -29,7 +33,7 @@ i = {
     'step': 60,
     'value': value,
     'counterType': "GAUGE",
-    'tags': ""
+    'tags': tags.strip(",")
 }
 d.append(i)
 print json.dumps(d)

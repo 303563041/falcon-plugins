@@ -11,7 +11,6 @@ import logging
 
 
 class Resource():
-
     def __init__(self):
         self.config = '/data/open-falcon/cfg.json'
         with open(self.config) as cfg:
@@ -24,6 +23,10 @@ class Resource():
         self.rates = ('ack', 'deliver', 'deliver_get', 'publish')
         self.logger = logging.getLogger("Rabbitmq")
         self.logger.setLevel(logging.INFO)
+        self.tags = ""
+        for k, v in self.data["default_tags"].items():
+            t = k + "=" + v
+            self.tags = self.tags + t + ","
 
     def connMq(self):
         try:
@@ -32,7 +35,7 @@ class Resource():
             request.add_header("Authorization", "Basic %s" % base64string)
             result = urllib2.urlopen(request)
             data = json.loads(result.read())
-        except Exception,e:
+        except Exception, e:
             self.logger.error(e)
             sys.exit()
         return data
@@ -59,7 +62,8 @@ class Resource():
                 q["counterType"] = self.counterType
                 q["metric"] = "rabbitmq.%s" % key
                 q["value"] = int(queue[key])
-                q["tags"] = "vhost=%s,name=%s" % (queue["vhost"], queue["name"])
+                q["tags"] = "vhost=" + queue["vhost"] + ",name=" + queue["name"] + "," + self.tags.strip(
+                    ",")
                 msg_total += q["value"]
                 p.append(q)
 
@@ -70,7 +74,8 @@ class Resource():
             q["step"] = self.step
             q["counterType"] = self.counterType
             q["metric"] = "rabbitmq.messages_total"
-            q["tags"] = "vhost=%s,name=%s" % (queue["vhost"], queue["name"])
+            q["tags"] = "vhost=" + queue["vhost"] + ",name=" + queue["name"] + "," + self.tags.strip(
+                ",")
             q["value"] = msg_total
             p.append(q)
 
@@ -82,9 +87,11 @@ class Resource():
                 q["step"] = self.step
                 q["counterType"] = self.counterType
                 q["metric"] = "rabbitmq.%s_rate" % rate
-                q["tags"] = "vhost=%s,name=%s" % (queue["vhost"], queue["name"])
+                q["tags"] = "vhost=" + queue["vhost"] + ",name=" + queue["name"] + "," + self.tags.strip(
+                    ",")
                 try:
-                    q["value"] = int(queue["message_stats"]["%s_details" % rate]["rate"])
+                    q["value"] = int(
+                        queue["message_stats"]["%s_details" % rate]["rate"])
                 except Exception:
                     q["value"] = 0
                 p.append(q)
@@ -92,6 +99,7 @@ class Resource():
 
     def run(self):
         return self.get_data()
+
 
 if __name__ == "__main__":
     d = Resource().run()
