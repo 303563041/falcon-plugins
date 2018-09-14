@@ -7,6 +7,7 @@ import os
 import json
 import re
 
+
 def checkFile(configs):
     '''
     check log
@@ -20,11 +21,11 @@ def checkFile(configs):
     for config in configs:
         path = config["path"]
         if not os.path.isfile(path):
-            return 0
+            continue
 
         curOffset = os.path.getsize(path)
         if curOffset < 0:
-            return 0
+            continue
 
         for keyword in config["keywords"]:
             exp = keyword["exp"]
@@ -35,7 +36,7 @@ def checkFile(configs):
             preOffset = loadOffset(task)
             if preOffset < 0:
                 saveOffset(task, curOffset)
-                return 0
+                continue
 
             saveOffset(task, curOffset)
 
@@ -75,12 +76,13 @@ def main():
 
     checkFile(configs)
 
+
 def loadOffset(task):
     fileName = task + ".logoffset"
     fullpath = "/data/open-falcon/plugin/log/data/" + fileName
 
     if not os.path.isfile(fullpath):
-        return -1;
+        return -1
 
     file = open(fullpath, 'r')
     offset = long(file.readline().split()[0])
@@ -96,6 +98,7 @@ def saveOffset(task, offset):
     file.write(str(offset))
     file.close()
     return
+
 
 if __name__ == "__main__":
     main()
